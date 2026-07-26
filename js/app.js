@@ -17,6 +17,16 @@ const App = (() => {
     const chainLinks = (cx) => linkY.map((y, i) =>
       `<ellipse class="chain-link" cx="${cx}" cy="${y}" rx="${i % 2 === 0 ? 5 : 8}" ry="${i % 2 === 0 ? 8 : 5}"/>`
     ).join("");
+    const clipId = "headclip-" + (small ? "sm" : "lg");
+    const photo = CONFIG.avatarPhoto && CONFIG.avatarPhoto.trim();
+    const headMarkup = photo
+      ? `<clipPath id="${clipId}"><circle cx="100" cy="132" r="17"/></clipPath>
+         <image href="${photo}" x="82" y="114" width="36" height="36" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice"/>
+         <circle cx="100" cy="132" r="17" fill="none" stroke="var(--text)" stroke-width="2"/>`
+      : `<circle class="figure-head" cx="100" cy="132" r="17"/>
+         <circle class="figure-face" cx="93" cy="131" r="2"/>
+         <circle class="figure-face" cx="107" cy="131" r="2"/>
+         <path d="M93,139 Q100,143 107,139" stroke="var(--text)" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
     return `
     <svg class="swing-avatar${small ? " sm" : ""}" width="${size}" height="${size * 1.55}" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a figure sitting on a chain swing">
       <defs>
@@ -45,47 +55,77 @@ const App = (() => {
         <ellipse class="figure-limb" cx="124" cy="228" rx="6" ry="3.5" style="fill:var(--secondary);stroke:none"/>
         <!-- hoodie body -->
         <path class="figure-hoodie" d="M74,150 Q100,136 126,150 L130,178 Q100,188 70,178 Z"/>
-        <!-- head -->
-        <circle class="figure-head" cx="100" cy="132" r="17"/>
-        <circle class="figure-face" cx="93" cy="131" r="2"/>
-        <circle class="figure-face" cx="107" cy="131" r="2"/>
-        <path d="M93,139 Q100,143 107,139" stroke="var(--text)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <!-- head (photo or illustrated) -->
+        ${headMarkup}
       </g>
     </svg>`;
   }
 
   /* ---------------- Boot sequence ---------------- */
   async function runBoot() {
-    const linesEl = $("#boot .boot-lines");
-    const bar = $("#boot .bar");
-    const pct = $("#boot .boot-pct");
-    const access = $("#boot .access");
-    const steps = [
-      "Initializing Portfolio OS...",
-      "Loading modules...",
-      "Connecting to GitHub...",
-      "Loading projects...",
-      "Authenticating user...",
-    ];
-    for (let i = 0; i < steps.length; i++) {
-      await sleep(220);
-      const d = document.createElement("div");
-      d.className = "ok";
-      d.textContent = steps[i];
-      linesEl.appendChild(d);
-      const target = Math.round(((i + 1) / steps.length) * 100);
-      await animateBar(bar, pct, target);
+    try {
+      console.log("runBoot called");
+      const linesEl = document.getElementById("boot-lines");
+      const bar = document.getElementById("boot-bar");
+      const pct = document.getElementById("boot-pct");
+      const access = document.getElementById("boot-access");
+      
+      console.log("Boot elements:", { linesEl, bar, pct, access });
+      
+      if (!linesEl || !bar || !pct || !access) {
+        console.error("Boot elements not found, skipping boot sequence");
+        document.getElementById("boot")?.remove();
+        document.getElementById("app")?.classList.add("ready");
+        document.getElementById("app")?.style.opacity = "1";
+        return;
+      }
+      
+      const steps = [
+        "Initializing Portfolio OS...",
+        "Loading modules...",
+        "Connecting to GitHub...",
+        "Loading projects...",
+        "Authenticating user...",
+      ];
+      console.log("Starting boot steps:", steps.length);
+      for (let i = 0; i < steps.length; i++) {
+        console.log(`Boot step ${i}: ${steps[i]}`);
+        await sleep(220);
+        const d = document.createElement("div");
+        d.style.color = "#00FF88";
+        d.textContent = steps[i];
+        linesEl.appendChild(d);
+        const target = Math.round(((i + 1) / steps.length) * 100);
+        console.log(`Animating bar to ${target}%`);
+        await animateBar(bar, pct, target);
+      }
+      await sleep(200);
+      access.textContent = "ACCESS GRANTED.";
+      access.style.transition = "opacity .4s";
+      access.style.opacity = "1";
+      await sleep(500);
+      const bootEl = document.getElementById("boot");
+      if (bootEl) {
+        bootEl.style.transition = "opacity .5s";
+        bootEl.style.opacity = "0";
+      }
+      await sleep(500);
+      bootEl?.remove();
+      const appEl = document.getElementById("app");
+      if (appEl) {
+        appEl.classList.add("ready");
+        appEl.style.opacity = "1";
+      }
+      console.log("Boot sequence complete");
+    } catch (e) {
+      console.error("Boot sequence error:", e);
+      document.getElementById("boot")?.remove();
+      const appEl = document.getElementById("app");
+      if (appEl) {
+        appEl.classList.add("ready");
+        appEl.style.opacity = "1";
+      }
     }
-    await sleep(200);
-    access.textContent = "ACCESS GRANTED.";
-    access.style.transition = "opacity .4s";
-    access.style.opacity = "1";
-    await sleep(500);
-    $("#boot").style.transition = "opacity .5s";
-    $("#boot").style.opacity = "0";
-    await sleep(500);
-    $("#boot").remove();
-    $("#app").classList.add("ready");
   }
   function animateBar(bar, pct, target) {
     return new Promise(resolve => {
@@ -680,23 +720,60 @@ const App = (() => {
 
   /* ---------------- Init ---------------- */
   async function init() {
-    initParticles();
-    matrix = initMatrixRain();
-    hackSim = initHackSimulation(() => CONFIG.name, () => CONFIG.location);
-    initKonami(() => openMatrix());
-    bindNav();
-    bindClock();
-    bindPalette();
-    const avatarSlot = document.getElementById("brand-avatar-slot");
-    if (avatarSlot) avatarSlot.innerHTML = swingAvatarSVG(34, true);
-    Terminal.bindInput();
-    await Terminal.boot();
-    Terminal.focus();
-    document.getElementById("terminal-input-row").addEventListener("click", Terminal.focus);
-    await runBoot();
+    console.log("App.init starting...");
+    try {
+      // Set boot logo
+      const bootLogo = document.getElementById("boot-logo");
+      if (bootLogo && typeof CONFIG !== 'undefined' && CONFIG.asciiLogo) {
+        bootLogo.textContent = CONFIG.asciiLogo;
+      }
+      
+      // Run boot sequence
+      await runBoot();
+      
+      initParticles();
+      console.log("Particles initialized");
+      matrix = initMatrixRain();
+      console.log("Matrix rain initialized");
+      hackSim = initHackSimulation(() => CONFIG.name, () => CONFIG.location);
+      console.log("Hack sim initialized");
+      initKonami(() => openMatrix());
+      console.log("Konami initialized");
+      bindNav();
+      console.log("Nav bound");
+      bindClock();
+      console.log("Clock bound");
+      bindPalette();
+      console.log("Palette bound");
+      const avatarSlot = document.getElementById("brand-avatar-slot");
+      if (avatarSlot) avatarSlot.innerHTML = swingAvatarSVG(34, true);
+      Terminal.bindInput();
+      console.log("Terminal input bound");
+      await Terminal.boot();
+      console.log("Terminal booted");
+      Terminal.focus();
+      console.log("Terminal focused");
+      const termInputRow = document.getElementById("terminal-input-row");
+      if (termInputRow) {
+        termInputRow.addEventListener("click", Terminal.focus);
+      }
+    } catch (e) {
+      console.error("Error during init:", e);
+      // Force show the app even if something fails
+      document.getElementById("boot")?.remove();
+      const appEl = document.getElementById("app");
+      if (appEl) {
+        appEl.classList.add("ready");
+        appEl.style.opacity = "1";
+      }
+    }
   }
 
   return { init, openWindow, setTheme, openMatrix, openHack, handleContactSubmit };
 })();
 
-document.addEventListener("DOMContentLoaded", App.init);
+console.log("app.js loaded, waiting for DOMContentLoaded");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOMContentLoaded fired, calling App.init");
+  App.init();
+});

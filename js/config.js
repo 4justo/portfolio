@@ -42,6 +42,12 @@ const CONFIG = {
 
   resumeUrl: "assets/resume.pdf", // drop your real PDF here
 
+  // Put a photo of yourself at e.g. assets/me.jpg and set the path below to
+  // show it as the "head" of the chain-swing avatar (sidebar + About page).
+  // Leave empty to keep the illustrated face. Square-ish photos, face
+  // centered, work best — it's cropped into a circle automatically.
+  avatarPhoto: "",
+
   bio: [
     "I build fast, resilient, slightly over-engineered software — because the boring parts deserve care too.",
     "Currently focused on developer tooling, distributed systems, and making terminals feel alive again.",

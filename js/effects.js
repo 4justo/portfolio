@@ -1,7 +1,19 @@
 /* ---------------- Floating particles ---------------- */
 function initParticles() {
   const canvas = document.getElementById("fx-particles");
+  if (!canvas) {
+    console.warn("Particles canvas not found, skipping particles");
+    return;
+  }
+  if (canvas.tagName !== 'CANVAS') {
+    console.warn("fx-particles element is not a canvas, skipping particles");
+    return;
+  }
   const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    console.warn("Could not get canvas context, skipping particles");
+    return;
+  }
   let w, h, particles;
 
   function resize() {

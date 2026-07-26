@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  This is a single-page app: every section (About, Projects, Skills, etc.)
-  lives inside index.html and is rendered client-side, so there's only one
-  real crawlable URL. Replace https://yourdomain.com/ below with your real
-  domain once deployed. If you later add real routes (e.g. by porting to
-  Next.js — see README §3), list each route here instead.
--->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 
+    NOTE: This is a single-page application (SPA). 
+    If you later add real routes (e.g., /about, /projects), add them here.
+    For now, only the root URL is listed.
+  -->
   <url>
     <loc>https://yourdomain.com/</loc>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
