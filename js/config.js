@@ -10,7 +10,7 @@ const CONFIG = {
   githubUsername: "your-github-username", // <-- CHANGE THIS. Everything in Projects/GitHub/Stats is fetched live from this.
   name: "Symon",
   handle: "@symon",
-  role: "Full-Stack Engineer · Systems Tinkerer",
+  role: "Full-Stack Engineer · AI/ML Engineer",
   location: "Nairobi, Kenya",
   timezone: "GMT+3",
   languagesSpoken: ["English", "Swahili"],
@@ -50,10 +50,11 @@ const CONFIG = {
 
   bio: [
     "I build fast, resilient, slightly over-engineered software — because the boring parts deserve care too.",
-    "Currently focused on developer tooling, distributed systems, and making terminals feel alive again.",
+    "Currently focused on AI/ML systems, LLM integration, and building intelligent developer tooling.",
+    "Passionate about bridging the gap between traditional software engineering and modern AI capabilities.",
   ],
-  mission: "Ship things that respect the user's time and the machine's resources.",
-  currentFocus: "Distributed systems & AI-assisted developer tooling.",
+  mission: "Ship intelligent systems that respect the user's time and leverage AI to enhance productivity.",
+  currentFocus: "Building AI-powered applications, fine-tuning language models, and creating next-gen developer tools.",
   favoriteQuote: "\"Programs must be written for people to read, and only incidentally for machines to execute.\"",
   funFacts: [
     "Has strong, unsolicited opinions about tabs vs spaces (tabs, obviously).",
@@ -83,19 +84,26 @@ const CONFIG = {
       { name: "CI/CD", level: 78, years: 3 },
     ]},
     { category: "AI / ML", items: [
-      { name: "LLM Integration", level: 84, years: 2 },
-      { name: "PyTorch", level: 65, years: 2 },
+      { name: "LLM Integration (OpenAI, Anthropic, HuggingFace)", level: 88, years: 2 },
+      { name: "PyTorch / TensorFlow", level: 75, years: 2 },
+      { name: "RAG Systems & Vector Databases", level: 82, years: 2 },
+      { name: "Fine-tuning & Model Optimization", level: 70, years: 2 },
+      { name: "LangChain & AI Agents", level: 85, years: 2 },
+      { name: "Computer Vision (OpenCV, YOLO)", level: 68, years: 1 },
     ]},
   ],
 
   experience: [
     {
-      role: "Senior Software Engineer",
+      role: "Senior AI/ML Engineer",
       org: "Example Corp",
       period: "2023 — Present",
       points: [
-        "Led migration of monolith to microservices, cutting deploy time 70%.",
-        "Mentored 4 junior engineers.",
+        "Led AI integration initiatives, implementing LLM-powered features that increased user engagement by 40%.",
+        "Built RAG systems for intelligent document search and retrieval across 100K+ documents.",
+        "Developed custom AI agents using LangChain for automated workflows and task automation.",
+        "Fine-tuned open-source models for domain-specific tasks, reducing inference costs by 60%.",
+        "Mentored team on AI best practices and responsible AI implementation.",
       ],
     },
     {
@@ -104,6 +112,8 @@ const CONFIG = {
       period: "2020 — 2023",
       points: [
         "Built internal developer platform used by 50+ engineers.",
+        "Implemented ML pipelines for data processing and model deployment.",
+        "Developed computer vision solutions for automated quality inspection.",
       ],
     },
   ],
@@ -115,15 +125,21 @@ const CONFIG = {
   certifications: [
     { name: "AWS Certified Solutions Architect", year: "2023", issuer: "Amazon Web Services" },
     { name: "Certified Kubernetes Administrator", year: "2022", issuer: "CNCF" },
+    { name: "Deep Learning Specialization", year: "2023", issuer: "Coursera / DeepLearning.AI" },
+    { name: "Machine Learning Engineering for Production (MLOps)", year: "2023", issuer: "Coursera / DeepLearning.AI" },
+    { name: "Natural Language Processing Specialization", year: "2022", issuer: "Coursera / DeepLearning.AI" },
   ],
 
   achievements: [
-    { title: "Hackathon Winner — DevFest 2023", desc: "1st place, built a real-time collab tool in 24h." },
-    { title: "Open Source Contributor of the Month", desc: "Recognized for contributions to a major OSS project." },
+    { title: "Hackathon Winner — AI DevFest 2023", desc: "1st place, built an AI-powered code review assistant in 24h." },
+    { title: "Open Source Contributor of the Month", desc: "Recognized for contributions to LangChain and HuggingFace ecosystems." },
+    { title: "AI Model Published on HuggingFace", desc: "Released a fine-tuned model for African language processing with 10K+ downloads." },
   ],
 
   blog: [
     { title: "Why I Rebuilt My Portfolio as an Operating System", date: "2026-05-12", tags: ["meta", "design"], excerpt: "A walkthrough of the terminal-first approach and why it beats a static page." },
+    { title: "Building Production RAG Systems at Scale", date: "2026-04-15", tags: ["ai", "rag", "vector-db"], excerpt: "Lessons learned from deploying RAG systems handling millions of documents." },
+    { title: "Fine-tuning LLaMA for Domain-Specific Tasks", date: "2026-03-20", tags: ["ai", "llm", "fine-tuning"], excerpt: "A practical guide to fine-tuning open-source models for specialized applications." },
     { title: "Notes on Building Fast React Apps", date: "2026-03-02", tags: ["react", "performance"], excerpt: "Practical, boring techniques that actually move the needle." },
   ],
 };

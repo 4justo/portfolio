@@ -1,14 +1,17 @@
 /* ---------------- Floating particles ---------------- */
 function initParticles() {
-  const canvas = document.getElementById("fx-particles");
-  if (!canvas) {
-    console.warn("Particles canvas not found, skipping particles");
+  const container = document.getElementById("fx-particles");
+  if (!container) {
+    console.warn("Particles container not found, skipping particles");
     return;
   }
-  if (canvas.tagName !== 'CANVAS') {
-    console.warn("fx-particles element is not a canvas, skipping particles");
-    return;
-  }
+  
+  // Create canvas dynamically
+  const canvas = document.createElement("canvas");
+  canvas.style.position = "absolute";
+  canvas.style.inset = "0";
+  container.appendChild(canvas);
+  
   const ctx = canvas.getContext("2d");
   if (!ctx) {
     console.warn("Could not get canvas context, skipping particles");

@@ -722,14 +722,15 @@ const App = (() => {
   async function init() {
     console.log("App.init starting...");
     try {
-      // Set boot logo
-      const bootLogo = document.getElementById("boot-logo");
-      if (bootLogo && typeof CONFIG !== 'undefined' && CONFIG.asciiLogo) {
-        bootLogo.textContent = CONFIG.asciiLogo;
+      // SKIP BOOT SEQUENCE - show app immediately
+      const bootEl = document.getElementById("boot");
+      if (bootEl) bootEl.remove();
+      const appEl = document.getElementById("app");
+      if (appEl) {
+        appEl.classList.add("ready");
+        appEl.style.opacity = "1";
       }
-      
-      // Run boot sequence
-      await runBoot();
+      console.log("App shown immediately (boot skipped)");
       
       initParticles();
       console.log("Particles initialized");

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio OS</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; background: #050505; color: #F5F5F5; font-family: monospace; }
+    #app { display: flex; flex-direction: column; height: 100vh; }
+    #topbar { height: 42px; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); border-bottom: 1px solid rgba(0,255,136,0.18); display: flex; align-items: center; padding: 0 14px; gap: 14px; }
+    #body-row { flex: 1; display: flex; }
+    #sidebar { width: 230px; background: #0b0d0c; border-right: 1px solid rgba(0,255,136,0.18); padding: 14px 10px; }
+    #main { flex: 1; padding: 22px 28px; overflow-y: auto; }
+    .nav-item { padding: 9px 10px; cursor: pointer; color: #999999; border-radius: 8px; margin-bottom: 2px; }
+    .nav-item:hover { color: #F5F5F5; background: rgba(255,255,255,0.03); }
+    .nav-item.active { color: #00FF88; background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.18); }
+    #terminal { font-size: 13px; line-height: 1.55; }
+    #terminal-input { background: transparent; border: none; outline: none; color: #F5F5F5; font-family: monospace; font-size: 13px; width: 100%; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="topbar">
+      <div style="display:flex;gap:7px;">
+        <div style="width:11px;height:11px;border-radius:50%;background:#FF4D4D;"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#FFC857;"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#00FF88;"></div>
+      </div>
+      <div style="color:#F5F5F5;font-weight:600;">portfolio-os — ~/terminal</div>
+      <div style="flex:1;"></div>
+      <div id="clock" style="color:#00D9FF;"></div>
+    </div>
+    <div id="body-row">
+      <div id="sidebar">
+        <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 16px;margin-bottom:10px;">
+          <img src="assets/icon-192.png" alt="icon" style="width:36px;height:36px;border-radius:8px;">
+          <div>
+            <div style="font-weight:700;color:#F5F5F5;font-size:13px;">Portfolio OS</div>
+            <div style="font-size:10px;color:#999999;">v1.0</div>
+          </div>
+        </div>
+        <div class="nav-item active" data-win="home">Home</div>
+        <div class="nav-item" data-win="about">About</div>
+        <div class="nav-item" data-win="projects">Projects</div>
+        <div class="nav-item" data-win="skills">Skills</div>
+        <div class="nav-item" data-win="experience">Experience</div>
+        <div class="nav-item" data-win="education">Education</div>
+        <div class="nav-item" data-win="contact">Contact</div>
+      </div>
+      <div id="main">
+        <div id="terminal"></div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <span style="color:#00FF88;font-weight:600;">➜</span>
+          <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Simple initialization - NO external JS files except config
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded');
+      
+      // Update clock
+      setInterval(() => {
+        document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+      }, 1000);
+      
+      // Simple nav
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+      
+      // Terminal welcome
+      const terminal = document.getElementById('terminal');
+      if (terminal && typeof CONFIG !== 'undefined') {
+        terminal.innerHTML = '<pre style="color:#00FF88;white-space:pre;font-size:10px;line-height:1.1;">' + CONFIG.asciiLogo + '</pre>';
+        terminal.innerHTML += '<div style="margin:10px 0;">Welcome to <span style="color:#00FF88;">Portfolio OS</span>. Type <span style="color:#00FF88;">help</span> for commands.</div>';
+      }
+      
+      // Terminal input
+      const input = document.getElementById('terminal-input');
+      if (input) {
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const cmd = input.value.trim();
+            if (cmd) {
+              terminal.innerHTML += '<div><span style="color:#00FF88;">➜</span> ' + cmd + '</div>';
+              if (cmd === 'help') {
+                terminal.innerHTML += '<div>Available commands: help, clear, whoami, about</div>';
+              } else if (cmd === 'clear') {
+                terminal.innerHTML = '';
+              } else if (cmd === 'whoami' && typeof CONFIG !== 'undefined') {
+                terminal.innerHTML += '<div>' + CONFIG.name + ' — ' + CONFIG.role + '</div>';
+              } else if (cmd === 'about' && typeof CONFIG !== 'undefined') {
+                terminal.innerHTML += '<div>' + CONFIG.bio.join(' ') + '</div>';
+              } else {
+                terminal.innerHTML += '<div style="color:#FF4D4D;">Command not found: ' + cmd + '</div>';
+              }
+              input.value = '';
+              terminal.scrollTop = terminal.scrollHeight;
+            }
+          }
+        });
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
