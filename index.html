@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio OS</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; background: #0a0000; color: #ff3333; font-family: 'Courier New', monospace; overflow: hidden; }
+    #app { display: flex; flex-direction: column; height: 100vh; }
+    #topbar { height: 42px; background: linear-gradient(180deg, rgba(255,0,0,.1), rgba(0,0,0,0)); border-bottom: 1px solid rgba(255,0,0,0.4); display: flex; align-items: center; padding: 0 14px; gap: 14px; box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+    #topbar .dots { display: flex; gap: 7px; }
+    #topbar .dot { width: 11px; height: 11px; border-radius: 50%; }
+    #topbar .dot.r { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
+    #topbar .dot.y { background: #ff6600; box-shadow: 0 0 10px #ff6600; }
+    #topbar .dot.g { background: #ff0000; box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000; animation: pulse-red 1s infinite; }
+    #topbar .title { color: #ff3333; font-weight: 700; letter-spacing: 1px; text-shadow: 0 0 10px #ff0000; text-transform: uppercase; }
+    #topbar .spacer { flex: 1; }
+    #topbar .clock { color: #ff6666; text-shadow: 0 0 5px #ff0000; }
+    #body-row { flex: 1; display: flex; }
+    #sidebar { width: 230px; background: #050000; border-right: 1px solid rgba(255,0,0,0.4); display: flex; flex-direction: column; padding: 14px 10px; gap: 2px; overflow-y: auto; box-shadow: inset 0 0 30px rgba(255,0,0,0.1); }
+    #sidebar .brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 16px; }
+    #sidebar .brand img { width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,0,0,0.4); box-shadow: 0 0 10px rgba(255,0,0,0.5); }
+    #sidebar .brand .n { font-weight: 700; color: #ff3333; font-size: 13px; text-shadow: 0 0 5px #ff0000; }
+    #sidebar .brand .r { font-size: 10px; color: #ff6666; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: #ff6666; font-size: 13px; transition: all .25s; border: 1px solid transparent; text-transform: uppercase; letter-spacing: 1px; }
+    .nav-item:hover { color: #ff0000 !important; background: rgba(255,0,0,0.15) !important; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+    .nav-item.active { color: #ff0000 !important; background: rgba(255,0,0,0.2) !important; border-color: rgba(255,0,0,0.6) !important; box-shadow: inset 2px 0 0 #ff0000, 0 0 20px rgba(255,0,0,0.4) !important; }
+    .nav-item .k { margin-left: auto; font-size: 10px; opacity: .7; color: #ff3333; }
+    #sidebar .divider { height: 1px; background: rgba(255,0,0,0.4); margin: 10px 4px; box-shadow: 0 0 5px rgba(255,0,0,0.3); }
+    #main { flex: 1; position: relative; overflow: hidden; background: radial-gradient(1200px 800px at 20% -10%, rgba(255,0,0,0.08), transparent), radial-gradient(1000px 700px at 100% 110%, rgba(139,0,0,0.1), transparent); }
+    .window { position: absolute; inset: 0; display: none; flex-direction: column; padding: 22px 28px; overflow-y: auto; animation: fadeIn 0.3s ease; }
+    .window.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    @keyframes pulse-red { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #ff0000; } 50% { opacity: 0.5; box-shadow: 0 0 5px #ff0000; } }
+    @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+    .cursor { animation: blink 0.5s infinite; color: #ff0000; }
+    #terminal { flex: 1; padding: 18px 20px; overflow-y: auto; font-size: 13px; line-height: 1.55; }
+    #terminal-input-row { display: flex; align-items: center; gap: 8px; padding: 10px 20px 18px; }
+    #terminal-input-row .prompt-label { color: #ff0000; font-weight: 700; text-shadow: 0 0 5px #ff0000; }
+    #terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #ff3333; font-family: 'Courier New', monospace; font-size: 13px; caret-color: #ff0000; }
+    #statusbar { height: 26px; flex: 0 0 auto; display: flex; align-items: center; gap: 18px; padding: 0 14px; background: #050000; border-top: 1px solid rgba(255,0,0,0.4); font-size: 11px; color: #ff6666; box-shadow: 0 -5px 20px rgba(255,0,0,0.2); }
+    #statusbar .item { display: flex; align-items: center; gap: 6px; }
+    #statusbar .spacer { flex: 1; }
+    .hidden { display: none !important; }
+    h1 { color: #ff0000; text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000; text-transform: uppercase; letter-spacing: 2px; animation: glitch 3s infinite; }
+    .subtitle { color: #ff6666; text-transform: uppercase; letter-spacing: 1px; }
+    p { color: #ff9999; }
+    h3 { color: #ff3333; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
+    ul { color: #ff9999; }
+    li { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <!-- Main App -->
+  <div id="app" style="position:fixed;inset:0;display:flex;flex-direction:column;opacity:1;z-index:2;">
+    <!-- Top Bar -->
+    <div id="topbar">
+      <div class="dots">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+      </div>
+      <div class="title">☠️ DARK PORTFOLIO — ☠️ ~/terminal</div>
+      <div class="spacer"></div>
+      <div class="clock" id="topbar-clock"></div>
+      <div class="sync">
+        <div class="led"></div>
+        <span>SYNC</span>
+      </div>
+    </div>
+
+    <!-- Body Row: Sidebar + Main -->
+    <div id="body-row">
+      <!-- Sidebar -->
+      <div id="sidebar">
+        <div class="brand">
+          <img src="assets/icon-192.png" alt="icon">
+          <div>
+            <div class="n">Portfolio OS</div>
+            <div class="r">v1.0</div>
+          </div>
+        </div>
+        <div class="nav-item active" data-win="home">Home <span class="k">⌘1</span></div>
+        <div class="nav-item" data-win="about">About <span class="k">⌘2</span></div>
+        <div class="nav-item" data-win="skills">Skills <span class="k">⌘4</span></div>
+        <div class="nav-item" data-win="experience">Experience <span class="k">⌘5</span></div>
+        <div class="nav-item" data-win="contact">Contact</div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div id="main">
+        <!-- Home / Terminal Window -->
+        <div id="win-home" class="window active">
+          <div id="terminal">
+            <pre id="ascii-art" style="color:#00FF88;white-space:pre;font-size:10px;line-height:1.1;"></pre>
+            <div id="welcome-msg"></div>
+          </div>
+          <div id="terminal-input-row">
+            <span class="prompt-label">➜</span>
+            <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+            <span class="cursor" style="color:#00FF88;">▊</span>
+          </div>
+        </div>
+
+        <!-- About Window -->
+        <div id="win-about" class="window">
+          <h1>About</h1>
+          <div class="subtitle">Full-Stack Engineer · AI/ML Engineer</div>
+          <p>I build fast, resilient, slightly over-engineered software — because the boring parts deserve care too.</p>
+          <p>Currently focused on AI/ML systems, LLM integration, and building intelligent developer tooling.</p>
+        </div>
+
+        <!-- Skills Window -->
+        <div id="win-skills" class="window">
+          <h1>Skills</h1>
+          <div class="subtitle">Technical expertise</div>
+          <h3>AI / ML</h3>
+          <ul>
+            <li>LLM Integration (OpenAI, Anthropic, HuggingFace)</li>
+            <li>PyTorch / TensorFlow</li>
+            <li>RAG Systems & Vector Databases</li>
+            <li>Fine-tuning & Model Optimization</li>
+            <li>LangChain & AI Agents</li>
+            <li>Computer Vision (OpenCV, YOLO)</li>
+          </ul>
+          <h3>Frontend</h3>
+          <ul>
+            <li>React / Next.js</li>
+            <li>TypeScript</li>
+            <li>Tailwind CSS</li>
+          </ul>
+          <h3>Backend</h3>
+          <ul>
+            <li>Node.js</li>
+            <li>Python</li>
+            <li>PostgreSQL</li>
+          </ul>
+        </div>
+
+        <!-- Experience Window -->
+        <div id="win-experience" class="window">
+          <h1>Experience</h1>
+          <div class="subtitle">Professional journey</div>
+          <div style="margin-bottom:20px;">
+            <div style="color:#00D9FF;font-size:11px;">2023 — Present</div>
+            <div style="font-size:15px;color:#F5F5F5;margin:2px 0;">Senior AI/ML Engineer</div>
+            <div style="font-size:12px;color:#999999;margin-bottom:6px;">Example Corp</div>
+            <ul style="margin:0;padding-left:18px;color:#999999;font-size:12.5px;">
+              <li>Led AI integration initiatives, implementing LLM-powered features that increased user engagement by 40%.</li>
+              <li>Built RAG systems for intelligent document search and retrieval across 100K+ documents.</li>
+              <li>Developed custom AI agents using LangChain for automated workflows and task automation.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact Window -->
+        <div id="win-contact" class="window">
+          <h1>Contact</h1>
+          <div class="subtitle">Get in touch</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid rgba(0,255,136,0.18);border-radius:8px;margin-bottom:10px;background:rgba(255,255,255,0.03);">
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;">
+              <span>Email</span>
+              <span style="color:#999999;">you@example.com</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid rgba(0,255,136,0.18);border-radius:8px;margin-bottom:10px;background:rgba(255,255,255,0.03);">
+            <div style="display:flex;gap:10px;align-items:center;font-size:13px;">
+              <span>GitHub</span>
+              <span style="color:#999999;">github.com/your-github-username</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="statusbar">
+      <div class="item">⚠ BREACH DETECTED</div>
+      <div class="spacer"></div>
+      <div class="item">☠️ DARK PORTFOLIO v1.0 ☠️</div>
+    </div>
+  </div>
+
+  <script>
+    // ASCII art logo - threatening skull
+    const asciiLogo = `
+██████╗ ███████╗ ██████╗ ██████╗ ██████╗ ███████╗
+██╔══██╗██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝
+██████╔╝█████╗  ██║     ██║   ██║██████╔╝███████╗
+██╔══██╗██╔══╝  ██║     ██║   ██║██╔══██╗╚════██║
+██║  ██║███████╗╚██████╗╚██████╔╝██║  ██║███████║
+╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+     ╔══╗╔╗──╔╗╔╗──╔╗╔══╗╔╗──╔╗
+     ║╔╗╗║║──║║║╚╗╔╝║╔╗╗║║╚╗╔╝║
+     ║║╚╝║╚╗╔╝║╚╗╚╝╔╝║║╚╝║╚╗╚╝╔╝
+     ║║──║╔╗╗║╚╗╔╗╔╝║║║──║╚╗╔╗╔╝
+     ║╚╗╔╝║║║║╔╝╚╝╚╗║║╚╗╔╝╔╝╚╝╚╗
+     ╚═╝╚╝╚╝╚╝╚╝──╚═╝╚═╝╚╝╚╝──╚═╝`;
+
+    // Typing effect function
+    function typeText(element, text, speed = 30) {
+      let i = 0;
+      element.innerHTML = '';
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Simple inline navigation - completely self-contained
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Page loaded');
+      
+      // Show ASCII logo with typing effect
+      const asciiArt = document.getElementById('ascii-art');
+      if (asciiArt) {
+        asciiArt.textContent = asciiLogo;
+      }
+      
+      // Type welcome message
+      const welcomeMsg = document.getElementById('welcome-msg');
+      if (welcomeMsg) {
+        setTimeout(() => {
+          typeText(welcomeMsg, '<span style="color:#ff0000;">⚠ SYSTEM BREACH DETECTED ⚠</span><br><br>Welcome to the <span style="color:#ff0000;">DARK PORTFOLIO</span>.<br>Your access has been logged.<br>Type <span style="color:#ff0000;">help</span> if you dare...', 15);
+        }, 500);
+      }
+      
+      // Update clock
+      setInterval(() => {
+        const clock = document.getElementById('topbar-clock');
+        if (clock) {
+          clock.textContent = new Date().toLocaleTimeString();
+        }
+      }, 1000);
+      
+      // Navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const winId = item.getAttribute('data-win');
+          console.log('Clicked:', winId);
+          if (winId) {
+            // Hide all windows
+            document.querySelectorAll('.window').forEach(w => {
+              w.style.display = 'none';
+              w.classList.remove('active');
+            });
+            // Show target window
+            const targetWin = document.getElementById('win-' + winId);
+            if (targetWin) {
+              targetWin.style.display = 'flex';
+              targetWin.classList.add('active');
+            }
+            // Update nav active state
+            document.querySelectorAll('.nav-item').forEach(n => {
+              n.classList.remove('active');
+            });
+            item.classList.add('active');
+          }
+        });
+      });
+      
+      // Terminal commands
+      const terminal = document.getElementById('terminal');
+      const input = document.getElementById('terminal-input');
+      
+      if (input) {
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const cmd = input.value.trim().toLowerCase();
+            if (cmd) {
+              // Add command to terminal
+              const cmdLine = document.createElement('div');
+              cmdLine.innerHTML = '<span style="color:#ff0000;">☠️</span> ' + input.value;
+              terminal.appendChild(cmdLine);
+              
+              // Process command
+              const response = document.createElement('div');
+              response.style.marginBottom = '10px';
+              
+              switch(cmd) {
+                case 'help':
+                  response.innerHTML = `
+                    <div style="color:#ff0000;">⚠ DANGEROUS COMMANDS ⚠</div>
+                    <div>  <span style="color:#ff3333;">help</span>     - Show this warning</div>
+                    <div>  <span style="color:#ff3333;">about</span>    - Know your enemy</div>
+                    <div>  <span style="color:#ff3333;">skills</span>   - My arsenal</div>
+                    <div>  <span style="color:#ff3333;">contact</span>  - Enter at your own risk</div>
+                    <div>  <span style="color:#ff3333;">clear</span>    - Destroy evidence</div>
+                    <div>  <span style="color:#ff3333;">whoami</span>   - Reveal identity</div>
+                    <div>  <span style="color:#ff3333;">date</span>     - Time remaining</div>
+                  `;
+                  break;
+                case 'about':
+                  response.innerHTML = `
+                    <div style="color:#ff0000;">⚡ FULL-STACK ENGINEER · AI/ML ENGINEER ⚡</div>
+                    <div style="margin-top:8px;">I build systems that cannot be stopped. The boring parts deserve to suffer.</div>
+                    <div style="margin-top:4px;">Currently weaponizing AI/ML systems, LLM integration, and building unstoppable developer tooling.</div>
+                  `;
+                  break;
+                case 'skills':
+                  response.innerHTML = `
+                    <div style="color:#ff0000;">⚔️ AI / ML ARSENAL:</div>
+                    <div>  • LLM Integration (OpenAI, Anthropic, HuggingFace)</div>
+                    <div>  • PyTorch / TensorFlow</div>
+                    <div>  • RAG Systems & Vector Databases</div>
+                    <div>  • Fine-tuning & Model Optimization</div>
+                    <div style="color:#ff0000;margin-top:8px;">⚔️ Frontend Weapons:</div>
+                    <div>  • React / Next.js</div>
+                    <div>  • TypeScript</div>
+                    <div>  • Tailwind CSS</div>
+                    <div style="color:#ff0000;margin-top:8px;">⚔️ Backend Arsenal:</div>
+                    <div>  • Node.js</div>
+                    <div>  • Python</div>
+                    <div>  • PostgreSQL</div>
+                  `;
+                  break;
+                case 'contact':
+                  response.innerHTML = `
+                    <div style="color:#ff0000;">☠️ CONTACT AT YOUR OWN RISK ☠️</div>
+                    <div>  📧 Email: you@example.com</div>
+                    <div>  🔗 GitHub: github.com/your-github-username</div>
+                    <div>  💼 LinkedIn: linkedin.com/in/your-handle</div>
+                  `;
+                  break;
+                case 'clear':
+                  terminal.innerHTML = '';
+                  terminal.appendChild(asciiArt);
+                  terminal.appendChild(welcomeMsg);
+                  input.value = '';
+                  terminal.scrollTop = terminal.scrollHeight;
+                  return;
+                case 'whoami':
+                  response.innerHTML = '<span style="color:#ff0000;">☠️ SYMON ☠️</span> — Full-Stack Engineer · AI/ML Engineer based in Nairobi, Kenya';
+                  break;
+                case 'date':
+                  response.innerHTML = '⏰ TIME: ' + new Date().toString() + ' — ⏳ COUNTDOWN IN PROGRESS';
+                  break;
+                default:
+                  response.innerHTML = '<span style="color:#ff0000;">⛔ ACCESS DENIED:</span> ' + cmd + ' is not recognized. Type <span style="color:#ff3333;">help</span> for dangerous commands.';
+              }
+              
+              terminal.appendChild(response);
+              input.value = '';
+              terminal.scrollTop = terminal.scrollHeight;
+            }
+          }
+        });
+        
+        // Auto-focus input when clicking terminal
+        terminal.addEventListener('click', () => input.focus());
+      }
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.altKey && e.key >= '1' && e.key <= '5') {
+          const navItems = document.querySelectorAll('.nav-item');
+          const index = parseInt(e.key) - 1;
+          if (navItems[index]) {
+            navItems[index].click();
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
