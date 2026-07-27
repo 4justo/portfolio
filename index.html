@@ -6,49 +6,47 @@
   <title>Portfolio OS</title>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #0a0000; color: #ff3333; font-family: 'Courier New', monospace; overflow: hidden; }
+    body { margin: 0; padding: 0; background: #050505; color: #F5F5F5; font-family: monospace; overflow: hidden; }
     #app { display: flex; flex-direction: column; height: 100vh; }
-    #topbar { height: 42px; background: linear-gradient(180deg, rgba(255,0,0,.1), rgba(0,0,0,0)); border-bottom: 1px solid rgba(255,0,0,0.4); display: flex; align-items: center; padding: 0 14px; gap: 14px; box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+    #topbar { height: 42px; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); border-bottom: 1px solid rgba(0,255,136,0.18); display: flex; align-items: center; padding: 0 14px; gap: 14px; }
     #topbar .dots { display: flex; gap: 7px; }
     #topbar .dot { width: 11px; height: 11px; border-radius: 50%; }
-    #topbar .dot.r { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
-    #topbar .dot.y { background: #ff6600; box-shadow: 0 0 10px #ff6600; }
-    #topbar .dot.g { background: #ff0000; box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000; animation: pulse-red 1s infinite; }
-    #topbar .title { color: #ff3333; font-weight: 700; letter-spacing: 1px; text-shadow: 0 0 10px #ff0000; text-transform: uppercase; }
+    #topbar .dot.r { background: #FF4D4D; }
+    #topbar .dot.y { background: #FFC857; }
+    #topbar .dot.g { background: #00FF88; box-shadow: 0 0 12px rgba(0,255,136,.45), 0 0 2px rgba(0,255,136,.8); }
+    #topbar .title { color: #F5F5F5; font-weight: 600; letter-spacing: .5px; }
     #topbar .spacer { flex: 1; }
-    #topbar .clock { color: #ff6666; text-shadow: 0 0 5px #ff0000; }
+    #topbar .clock { color: #00D9FF; }
     #body-row { flex: 1; display: flex; }
-    #sidebar { width: 230px; background: #050000; border-right: 1px solid rgba(255,0,0,0.4); display: flex; flex-direction: column; padding: 14px 10px; gap: 2px; overflow-y: auto; box-shadow: inset 0 0 30px rgba(255,0,0,0.1); }
+    #sidebar { width: 230px; background: #0b0d0c; border-right: 1px solid rgba(0,255,136,0.18); display: flex; flex-direction: column; padding: 14px 10px; gap: 2px; overflow-y: auto; }
     #sidebar .brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 16px; }
-    #sidebar .brand img { width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,0,0,0.4); box-shadow: 0 0 10px rgba(255,0,0,0.5); }
-    #sidebar .brand .n { font-weight: 700; color: #ff3333; font-size: 13px; text-shadow: 0 0 5px #ff0000; }
-    #sidebar .brand .r { font-size: 10px; color: #ff6666; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: #ff6666; font-size: 13px; transition: all .25s; border: 1px solid transparent; text-transform: uppercase; letter-spacing: 1px; }
-    .nav-item:hover { color: #ff0000 !important; background: rgba(255,0,0,0.15) !important; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
-    .nav-item.active { color: #ff0000 !important; background: rgba(255,0,0,0.2) !important; border-color: rgba(255,0,0,0.6) !important; box-shadow: inset 2px 0 0 #ff0000, 0 0 20px rgba(255,0,0,0.4) !important; }
-    .nav-item .k { margin-left: auto; font-size: 10px; opacity: .7; color: #ff3333; }
-    #sidebar .divider { height: 1px; background: rgba(255,0,0,0.4); margin: 10px 4px; box-shadow: 0 0 5px rgba(255,0,0,0.3); }
-    #main { flex: 1; position: relative; overflow: hidden; background: radial-gradient(1200px 800px at 20% -10%, rgba(255,0,0,0.08), transparent), radial-gradient(1000px 700px at 100% 110%, rgba(139,0,0,0.1), transparent); }
+    #sidebar .brand img { width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(0,255,136,0.18); }
+    #sidebar .brand .n { font-weight: 700; color: #F5F5F5; font-size: 13px; }
+    #sidebar .brand .r { font-size: 10px; color: #999999; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: #999999; font-size: 13px; transition: all .25s; border: 1px solid transparent; }
+    .nav-item:hover { color: #F5F5F5 !important; background: rgba(255,255,255,0.03) !important; }
+    .nav-item.active { color: #00FF88 !important; background: rgba(0,255,136,0.08) !important; border-color: rgba(0,255,136,0.18) !important; box-shadow: inset 2px 0 0 #00FF88 !important; }
+    .nav-item .k { margin-left: auto; font-size: 10px; opacity: .5; }
+    #sidebar .divider { height: 1px; background: rgba(0,255,136,0.18); margin: 10px 4px; }
+    #main { flex: 1; position: relative; overflow: hidden; background: radial-gradient(1200px 800px at 20% -10%, rgba(0,217,255,0.06), transparent), radial-gradient(1000px 700px at 100% 110%, rgba(139,92,246,0.07), transparent); }
     .window { position: absolute; inset: 0; display: none; flex-direction: column; padding: 22px 28px; overflow-y: auto; animation: fadeIn 0.3s ease; }
     .window.active { display: flex; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-    @keyframes pulse-red { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #ff0000; } 50% { opacity: 0.5; box-shadow: 0 0 5px #ff0000; } }
-    @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
-    .cursor { animation: blink 0.5s infinite; color: #ff0000; }
+    .cursor { animation: blink 1s infinite; }
     #terminal { flex: 1; padding: 18px 20px; overflow-y: auto; font-size: 13px; line-height: 1.55; }
     #terminal-input-row { display: flex; align-items: center; gap: 8px; padding: 10px 20px 18px; }
-    #terminal-input-row .prompt-label { color: #ff0000; font-weight: 700; text-shadow: 0 0 5px #ff0000; }
-    #terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #ff3333; font-family: 'Courier New', monospace; font-size: 13px; caret-color: #ff0000; }
-    #statusbar { height: 26px; flex: 0 0 auto; display: flex; align-items: center; gap: 18px; padding: 0 14px; background: #050000; border-top: 1px solid rgba(255,0,0,0.4); font-size: 11px; color: #ff6666; box-shadow: 0 -5px 20px rgba(255,0,0,0.2); }
+    #terminal-input-row .prompt-label { color: #00FF88; font-weight: 600; }
+    #terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #F5F5F5; font-family: monospace; font-size: 13px; caret-color: #00FF88; }
+    #statusbar { height: 26px; flex: 0 0 auto; display: flex; align-items: center; gap: 18px; padding: 0 14px; background: #0b0d0c; border-top: 1px solid rgba(0,255,136,0.18); font-size: 11px; color: #999999; }
     #statusbar .item { display: flex; align-items: center; gap: 6px; }
     #statusbar .spacer { flex: 1; }
     .hidden { display: none !important; }
-    h1 { color: #ff0000; text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000; text-transform: uppercase; letter-spacing: 2px; animation: glitch 3s infinite; }
-    .subtitle { color: #ff6666; text-transform: uppercase; letter-spacing: 1px; }
-    p { color: #ff9999; }
-    h3 { color: #ff3333; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
-    ul { color: #ff9999; }
+    h1 { color: #00FF88; text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+    .subtitle { color: #00D9FF; }
+    p { color: #F5F5F5; }
+    h3 { color: #00D9FF; }
+    ul { color: #999999; }
     li { margin: 5px 0; }
   </style>
 </head>
@@ -62,7 +60,7 @@
         <div class="dot y"></div>
         <div class="dot g"></div>
       </div>
-      <div class="title">☠️ DARK PORTFOLIO — ☠️ ~/terminal</div>
+      <div class="title">portfolio-os — ~/terminal</div>
       <div class="spacer"></div>
       <div class="clock" id="topbar-clock"></div>
       <div class="sync">
@@ -177,27 +175,21 @@
 
     <!-- Status Bar -->
     <div id="statusbar">
-      <div class="item">⚠ BREACH DETECTED</div>
+      <div class="item">READY</div>
       <div class="spacer"></div>
-      <div class="item">☠️ DARK PORTFOLIO v1.0 ☠️</div>
+      <div class="item">Portfolio OS v1.0</div>
     </div>
   </div>
 
   <script>
-    // ASCII art logo - threatening skull
+    // ASCII art logo
     const asciiLogo = `
-██████╗ ███████╗ ██████╗ ██████╗ ██████╗ ███████╗
-██╔══██╗██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝
-██████╔╝█████╗  ██║     ██║   ██║██████╔╝███████╗
-██╔══██╗██╔══╝  ██║     ██║   ██║██╔══██╗╚════██║
-██║  ██║███████╗╚██████╗╚██████╔╝██║  ██║███████║
-╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
-     ╔══╗╔╗──╔╗╔╗──╔╗╔══╗╔╗──╔╗
-     ║╔╗╗║║──║║║╚╗╔╝║╔╗╗║║╚╗╔╝║
-     ║║╚╝║╚╗╔╝║╚╗╚╝╔╝║║╚╝║╚╗╚╝╔╝
-     ║║──║╔╗╗║╚╗╔╗╔╝║║║──║╚╗╔╗╔╝
-     ║╚╗╔╝║║║║╔╝╚╝╚╗║║╚╗╔╝╔╝╚╝╚╗
-     ╚═╝╚╝╚╝╚╝╚╝──╚═╝╚═╝╚╝╚╝──╚═╝`;
+███████╗██╗   ██╗███╗   ███╗ ██████╗ ███╗   ██╗
+██╔════╝╚██╗ ██╔╝████╗ ████║██╔═══██╗████╗  ██║
+███████╗ ╚████╔╝ ██╔████╔██║██║   ██║██╔██╗ ██║
+╚════██║  ╚██╔╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+███████║   ██║   ██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+╚══════╝   ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝`;
 
     // Typing effect function
     function typeText(element, text, speed = 30) {
@@ -227,7 +219,7 @@
       const welcomeMsg = document.getElementById('welcome-msg');
       if (welcomeMsg) {
         setTimeout(() => {
-          typeText(welcomeMsg, '<span style="color:#ff0000;">⚠ SYSTEM BREACH DETECTED ⚠</span><br><br>Welcome to the <span style="color:#ff0000;">DARK PORTFOLIO</span>.<br>Your access has been logged.<br>Type <span style="color:#ff0000;">help</span> if you dare...', 15);
+          typeText(welcomeMsg, 'Welcome to <span style="color:#00FF88;">Portfolio OS</span>. Type <span style="color:#00FF88;">help</span> for commands.', 20);
         }, 500);
       }
       
@@ -276,7 +268,7 @@
             if (cmd) {
               // Add command to terminal
               const cmdLine = document.createElement('div');
-              cmdLine.innerHTML = '<span style="color:#ff0000;">☠️</span> ' + input.value;
+              cmdLine.innerHTML = '<span style="color:#00FF88;">➜</span> ' + input.value;
               terminal.appendChild(cmdLine);
               
               // Process command
@@ -286,35 +278,35 @@
               switch(cmd) {
                 case 'help':
                   response.innerHTML = `
-                    <div style="color:#ff0000;">⚠ DANGEROUS COMMANDS ⚠</div>
-                    <div>  <span style="color:#ff3333;">help</span>     - Show this warning</div>
-                    <div>  <span style="color:#ff3333;">about</span>    - Know your enemy</div>
-                    <div>  <span style="color:#ff3333;">skills</span>   - My arsenal</div>
-                    <div>  <span style="color:#ff3333;">contact</span>  - Enter at your own risk</div>
-                    <div>  <span style="color:#ff3333;">clear</span>    - Destroy evidence</div>
-                    <div>  <span style="color:#ff3333;">whoami</span>   - Reveal identity</div>
-                    <div>  <span style="color:#ff3333;">date</span>     - Time remaining</div>
+                    <div style="color:#00D9FF;">Available commands:</div>
+                    <div>  <span style="color:#00FF88;">help</span>     - Show this help message</div>
+                    <div>  <span style="color:#00FF88;">about</span>    - About me</div>
+                    <div>  <span style="color:#00FF88;">skills</span>   - My skills</div>
+                    <div>  <span style="color:#00FF88;">contact</span>  - Contact information</div>
+                    <div>  <span style="color:#00FF88;">clear</span>    - Clear terminal</div>
+                    <div>  <span style="color:#00FF88;">whoami</span>   - Who am I</div>
+                    <div>  <span style="color:#00FF88;">date</span>     - Current date and time</div>
                   `;
                   break;
                 case 'about':
                   response.innerHTML = `
-                    <div style="color:#ff0000;">⚡ FULL-STACK ENGINEER · AI/ML ENGINEER ⚡</div>
-                    <div style="margin-top:8px;">I build systems that cannot be stopped. The boring parts deserve to suffer.</div>
-                    <div style="margin-top:4px;">Currently weaponizing AI/ML systems, LLM integration, and building unstoppable developer tooling.</div>
+                    <div style="color:#00D9FF;">Full-Stack Engineer · AI/ML Engineer</div>
+                    <div style="margin-top:8px;">I build fast, resilient, slightly over-engineered software — because the boring parts deserve care too.</div>
+                    <div style="margin-top:4px;">Currently focused on AI/ML systems, LLM integration, and building intelligent developer tooling.</div>
                   `;
                   break;
                 case 'skills':
                   response.innerHTML = `
-                    <div style="color:#ff0000;">⚔️ AI / ML ARSENAL:</div>
+                    <div style="color:#00D9FF;">AI / ML:</div>
                     <div>  • LLM Integration (OpenAI, Anthropic, HuggingFace)</div>
                     <div>  • PyTorch / TensorFlow</div>
                     <div>  • RAG Systems & Vector Databases</div>
                     <div>  • Fine-tuning & Model Optimization</div>
-                    <div style="color:#ff0000;margin-top:8px;">⚔️ Frontend Weapons:</div>
+                    <div style="color:#00D9FF;margin-top:8px;">Frontend:</div>
                     <div>  • React / Next.js</div>
                     <div>  • TypeScript</div>
                     <div>  • Tailwind CSS</div>
-                    <div style="color:#ff0000;margin-top:8px;">⚔️ Backend Arsenal:</div>
+                    <div style="color:#00D9FF;margin-top:8px;">Backend:</div>
                     <div>  • Node.js</div>
                     <div>  • Python</div>
                     <div>  • PostgreSQL</div>
@@ -322,7 +314,7 @@
                   break;
                 case 'contact':
                   response.innerHTML = `
-                    <div style="color:#ff0000;">☠️ CONTACT AT YOUR OWN RISK ☠️</div>
+                    <div style="color:#00D9FF;">Contact Information:</div>
                     <div>  📧 Email: you@example.com</div>
                     <div>  🔗 GitHub: github.com/your-github-username</div>
                     <div>  💼 LinkedIn: linkedin.com/in/your-handle</div>
@@ -336,13 +328,13 @@
                   terminal.scrollTop = terminal.scrollHeight;
                   return;
                 case 'whoami':
-                  response.innerHTML = '<span style="color:#ff0000;">☠️ SYMON ☠️</span> — Full-Stack Engineer · AI/ML Engineer based in Nairobi, Kenya';
+                  response.innerHTML = '<span style="color:#00FF88;">Symon</span> — Full-Stack Engineer · AI/ML Engineer based in Nairobi, Kenya';
                   break;
                 case 'date':
-                  response.innerHTML = '⏰ TIME: ' + new Date().toString() + ' — ⏳ COUNTDOWN IN PROGRESS';
+                  response.innerHTML = new Date().toString();
                   break;
                 default:
-                  response.innerHTML = '<span style="color:#ff0000;">⛔ ACCESS DENIED:</span> ' + cmd + ' is not recognized. Type <span style="color:#ff3333;">help</span> for dangerous commands.';
+                  response.innerHTML = '<span style="color:#FF4D4D;">Command not found:</span> ' + cmd + '. Type <span style="color:#00FF88;">help</span> for available commands.';
               }
               
               terminal.appendChild(response);
