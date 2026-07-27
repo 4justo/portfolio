@@ -29,7 +29,7 @@
     .nav-item .k { margin-left: auto; font-size: 10px; opacity: .5; }
     #sidebar .divider { height: 1px; background: rgba(0,255,136,0.18); margin: 10px 4px; }
     #main { flex: 1; position: relative; overflow: hidden; background: radial-gradient(1200px 800px at 20% -10%, rgba(0,217,255,0.06), transparent), radial-gradient(1000px 700px at 100% 110%, rgba(139,92,246,0.07), transparent); }
-    .window { position: absolute; inset: 0; display: none; flex-direction: column; padding: 22px 28px; overflow-y: auto; -webkit-overflow-scrolling: touch; animation: fadeIn 0.3s ease; }
+    .window { position: absolute; inset: 0; display: none; flex-direction: column; padding: 22px 28px; overflow-y: auto; -webkit-overflow-scrolling: touch; animation: fadeIn 0.3s ease; max-height: calc(100vh - 68px); }
     .window.active { display: flex; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
@@ -321,9 +321,10 @@
                   break;
                 case 'about':
                   response.innerHTML = `
-                    <div style="color:#00D9FF;">Full-Stack Engineer · AI/ML Engineer</div>
-                    <div style="margin-top:8px;">I build fast, resilient, slightly over-engineered software — because the boring parts deserve care too.</div>
-                    <div style="margin-top:4px;">Currently focused on AI/ML systems, LLM integration, and building intelligent developer tooling.</div>
+                    <div style="color:#00D9FF;">Full-Stack Engineer and AI/ML Specialist</div>
+                    <div style="margin-top:8px;">6+ years of experience building scalable applications and intelligent systems.</div>
+                    <div style="margin-top:4px;">Proven track record: 40%+ user engagement increase, 60% cost reduction.</div>
+                    <div style="margin-top:4px;">Expert in bridging traditional software engineering with cutting-edge AI capabilities.</div>
                   `;
                   break;
                 case 'skills':
