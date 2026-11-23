@@ -179,6 +179,7 @@ const Terminal = (() => {
     CONFIG.skills.forEach(group => {
       boldHeader(group.category);
       group.items.forEach(s => {
+        if (!s.level) { print(`  ${s.name}`); return; }
         const filled = Math.round(s.level / 5);
         print(`  ${s.name.padEnd(20)} <span class="ok">${"█".repeat(filled)}</span><span class="muted">${"░".repeat(20-filled)}</span> ${s.level}%`);
       });
@@ -217,7 +218,7 @@ const Terminal = (() => {
   function cmdContact() {
     boldHeader("CONTACT");
     printRaw(`Email:    ${CONFIG.email}`);
-    printRaw(`Phone:    ${CONFIG.phone}`);
+    if (CONFIG.phone) printRaw(`Phone:    ${CONFIG.phone}`);
     printRaw(`GitHub:   ${CONFIG.socials.github}`);
     printRaw(`LinkedIn: ${CONFIG.socials.linkedin}`);
     App.openWindow("contact");
@@ -309,16 +310,13 @@ const Terminal = (() => {
       `Shell: portfolio-sh`,
       `Theme: ${document.body.getAttribute("data-theme") || "hacker"}`,
       `Languages: ${CONFIG.languagesSpoken.join(", ")}`,
-      `Coffee: ${CONFIG.stats.coffeeCount} cups`,
     ];
     print(`<pre class="ascii-logo">${CONFIG.asciiLogo}</pre>`);
     lines.forEach(l => printRaw(l));
   }
   async function cmdStats() {
     const [profile, repos] = await Promise.all([GitHubSync.getProfile(), GitHubSync.getRepos()]);
-    printRaw(`Years coding:     ${CONFIG.stats.yearsCoding}`);
-    printRaw(`Lines of code:    ${CONFIG.stats.linesOfCode}`);
-    printRaw(`Coffee consumed:  ${CONFIG.stats.coffeeCount} cups`);
+    if (CONFIG.stats.yearsCoding) printRaw(`Years coding:     ${CONFIG.stats.yearsCoding}`);
     if (profile) printRaw(`GitHub followers: ${profile.followers}`);
     if (repos) printRaw(`Public repos:     ${repos.length}`);
   }
