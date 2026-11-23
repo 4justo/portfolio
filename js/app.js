@@ -76,7 +76,7 @@ const App = (() => {
         console.error("Boot elements not found, skipping boot sequence");
         document.getElementById("boot")?.remove();
         document.getElementById("app")?.classList.add("ready");
-        document.getElementById("app")?.style.opacity = "1";
+        { const appEl = document.getElementById("app"); if (appEl) appEl.style.opacity = "1"; }
         return;
       }
       
@@ -209,9 +209,8 @@ const App = (() => {
           <div class="setting-row"><span>Timezone</span><span class="muted">${CONFIG.timezone}</span></div>
           <div class="setting-row"><span>Languages</span><span class="muted">${CONFIG.languagesSpoken.join(", ")}</span></div>
           <div class="setting-row"><span>Availability</span><span class="ok">${CONFIG.availability}</span></div>
-          <div class="setting-row"><span>Years coding</span><span class="muted">${CONFIG.stats.yearsCoding}</span></div>
-          <div class="setting-row"><span>Lines of code</span><span class="muted">${CONFIG.stats.linesOfCode}</span></div>
-          <div class="setting-row" style="border-bottom:none"><span>Coffee</span><span class="muted">${CONFIG.stats.coffeeCount} cups ☕</span></div>
+          ${CONFIG.stats.yearsCoding ? `<div class="setting-row"><span>Years coding</span><span class="muted">${CONFIG.stats.yearsCoding}</span></div>` : ""}
+          <div class="setting-row" style="border-bottom:none"><span>GitHub</span><a class="muted" href="${CONFIG.socials.github}" target="_blank">${CONFIG.socials.github.replace("https://","")}</a></div>
         </div>
       </div>
       <div class="panel" style="margin-top:14px">
@@ -276,8 +275,8 @@ const App = (() => {
           <h3 style="margin-top:0;color:var(--text)">${g.category}</h3>
           ${g.items.map(s => `
             <div class="skill-row">
-              <div class="top"><span>${s.name}</span><span class="muted">${s.years}y</span></div>
-              <div class="track"><div class="fill" data-level="${s.level}"></div></div>
+              <div class="top"><span>${s.name}</span><span class="muted">${s.years ? s.years + "y" : ""}</span></div>
+              ${s.level ? `<div class="track"><div class="fill" data-level="${s.level}"></div></div>` : ""}
             </div>`).join("")}
         </div>`).join("")}
       </div>`;
@@ -411,7 +410,7 @@ const App = (() => {
       ["WhatsApp", CONFIG.whatsapp, CONFIG.whatsapp],
       ["Telegram", CONFIG.telegram, CONFIG.telegram],
       ["Discord", CONFIG.discord, "#"],
-    ];
+    ].filter(([, val]) => val);
     el.innerHTML = `<h1>Contact</h1><div class="subtitle">Reach out — I usually reply within a day.</div>
       <div class="grid cols-2">
         <div>
